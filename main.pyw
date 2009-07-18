@@ -67,11 +67,9 @@ class ViewerWidget(QWidget):
             if not self.instant:
                 painter.fillRect(QRect(x, y, 1, 1), c)
             else:
-                # THIS IS STILL EXPERIMENTAL
+                # THIS IS STILL BUGGY
                 k = left_most_bit(self.buck_pix[buck])
                 if self.buck_pix[buck] > (1 << k):
-                    k += 1
-                if k % 2:
                     k += 1
                 k = k // 2 + k % 2
                 l = self.buck_size_log - k
