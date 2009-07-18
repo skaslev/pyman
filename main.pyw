@@ -1,7 +1,8 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from math import *
+from math import ceil
 from random import randrange
+from util import left_most_bit
 from fractals import Mandelbrot
 from permutations import random_permutation,fract8_create
 
@@ -11,6 +12,7 @@ class ViewerWidget(QWidget):
         self.setWindowTitle(self.tr("PyMan"))
         self.resize(256, 256)
 
+        self.instant = False
         self.fractal = Mandelbrot(50)
         self.offset = QPointF()
         self.scale = 5
@@ -62,7 +64,20 @@ class ViewerWidget(QWidget):
             p = complex(p.x(), p.y())
             c = self.fractal(p)
 
-            painter.fillRect(QRect(x, y, 1, 1), c)
+            if not self.instant:
+                painter.fillRect(QRect(x, y, 1, 1), c)
+            else:
+                # THIS IS STILL EXPERIMENTAL
+                k = left_most_bit(self.buck_pix[buck])
+                if self.buck_pix[buck] > (1 << k):
+                    k += 1
+                if k % 2:
+                    k += 1
+                k = k // 2 + k % 2
+                l = self.buck_size_log - k
+                (nx,ny) = (bx + ((px >> l) << l), by + ((py >> l) << l))
+                painter.fillRect(QRect(nx, ny, 1 << l, 1 << l), c)
+                
         return self.nr_pixels == len(self.buck_perm) * self.buck_size_sq
 
     def paintEvent(self, event):
@@ -95,6 +110,12 @@ class ViewerWidget(QWidget):
         if event.button() == Qt.LeftButton:
             dxy = QPointF(event.pos()) - self.last_pos
             self.offset -= QPointF(dxy.x() / self.width(), dxy.y() / self.height()) * self.scale
+            self.reset_pixels()
+
+    def keyPressEvent(self, event):
+        key = event.key()
+        if key == Qt.Key_I:
+            self.instant = not self.instant
             self.reset_pixels()
 
 if __name__ == '__main__':
