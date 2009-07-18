@@ -1,5 +1,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from math import *
+from random import randrange
 from fractals import Mandelbrot
 from permutations import random_permutation
 
@@ -14,39 +16,63 @@ class ViewerWidget(QWidget):
         self.scale = 5
         self.last_pos = QPointF()
         self.resize_pixmap()
-        self.reset_pixels()
 
     def resize_pixmap(self):
-        self.perm = random_permutation(self.width() * self.height())
         self.pixmap = QPixmap(self.width(), self.height())
         self.pixmap.fill(QColor())
 
+        self.buck_size_log = 4
+        self.buck_size = 2 ** self.buck_size_log
+        self.buck_size_sq = self.buck_size ** 2
+
+        self.nr_buck = ceil(self.width()  / self.buck_size) * \
+                       ceil(self.height() / self.buck_size)
+
+        self.perm = random_permutation(self.buck_size_sq)
+        self.buck_perm = random_permutation(self.nr_buck)
+
+        self.reset_pixels()
+
     def reset_pixels(self):
+        self.buck_offs = [2 ** randrange(0,2*self.buck_size_log) for i in range(self.nr_buck)]
+        self.buck_pix  = [0] * self.nr_buck
         self.nr_pixels = 0
         self.update()
 
     def update_pixels(self, n=1000):
-        n = min(n, self.width() * self.height() - self.nr_pixels)
+        n = min(n, len(self.buck_perm) * self.buck_size_sq - self.nr_pixels)
         painter = QPainter(self.pixmap)
         center = QPointF(self.width() / 2, self.height() / 2)
         for i in range(n):
-            (y,x) = divmod(self.perm[self.nr_pixels], self.width())
+            buck = self.buck_perm[self.nr_pixels % len(self.buck_perm)]
+            self.nr_pixels += 1
+
+            (by,bx) = divmod(buck, ceil(self.width() / self.buck_size))
+            (bx,by) = (bx*self.buck_size, by*self.buck_size)
+            assert self.buck_pix[buck] < self.buck_size_sq
+            pix = self.perm[(self.buck_pix[buck] + self.buck_offs[buck]) % len(self.perm)]
+            (py,px) = divmod(pix, self.buck_size)
+            self.buck_pix[buck] += 1
+            (x,y) = (bx+px,by+py)
+            if x >= self.width() or y >= self.height():
+                continue
+
             p = QPointF(x,y) - center
             p = self.offset + QPointF(p.x() / self.width(), p.y() / self.height()) * self.scale
             p = complex(p.x(), p.y())
             c = self.fractal(p)
-            self.nr_pixels += 1
+
             painter.fillRect(QRect(x, y, 1, 1), c)
+        return self.nr_pixels == len(self.buck_perm) * self.buck_size_sq
 
     def paintEvent(self, event):
-        self.update_pixels()
+        done = self.update_pixels()
         QPainter(self).drawPixmap(0, 0, self.pixmap)
-        if self.nr_pixels != self.width() * self.height():
+        if not done:
             self.update()
 
     def resizeEvent(self, event):
         self.resize_pixmap()
-        self.reset_pixels()
 
     def wheelEvent(self, event):
         numDegrees = event.delta() / 8
