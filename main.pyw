@@ -12,7 +12,7 @@ class ViewerWidget(QWidget):
         self.setWindowTitle(self.tr("PyMan"))
         self.resize(256, 256)
 
-        self.instant = False
+        self.instant = True
         self.fractal = Mandelbrot(50)
         self.offset = QPointF()
         self.scale = 5
@@ -113,8 +113,10 @@ class ViewerWidget(QWidget):
             self.reset_pixels()
 
     def keyPressEvent(self, event):
-        key = event.key()
-        if key == Qt.Key_I:
+        key, mod = event.key(), event.modifiers()
+        if key == Qt.Key_Q and mod == Qt.ControlModifier:
+            self.close()
+        elif key == Qt.Key_I:
             self.instant = not self.instant
             self.reset_pixels()
 
