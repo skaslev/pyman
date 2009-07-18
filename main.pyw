@@ -3,7 +3,7 @@ from PyQt4.QtGui import *
 from math import *
 from random import randrange
 from fractals import Mandelbrot
-from permutations import random_permutation
+from permutations import random_permutation,fract8_create
 
 class ViewerWidget(QWidget):
     def __init__(self, parent=None):
@@ -28,13 +28,13 @@ class ViewerWidget(QWidget):
         self.nr_buck = ceil(self.width()  / self.buck_size) * \
                        ceil(self.height() / self.buck_size)
 
-        self.perm = random_permutation(self.buck_size_sq)
+        self.perm_x,self.perm_y = fract8_create()
         self.buck_perm = random_permutation(self.nr_buck)
 
         self.reset_pixels()
 
     def reset_pixels(self):
-        self.buck_offs = [2 ** randrange(0,2*self.buck_size_log) for i in range(self.nr_buck)]
+        self.buck_offs = [2 ** randrange(2*self.buck_size_log) for i in range(self.nr_buck)]
         self.buck_pix  = [0] * self.nr_buck
         self.nr_pixels = 0
         self.update()
@@ -50,8 +50,8 @@ class ViewerWidget(QWidget):
             (by,bx) = divmod(buck, ceil(self.width() / self.buck_size))
             (bx,by) = (bx*self.buck_size, by*self.buck_size)
             assert self.buck_pix[buck] < self.buck_size_sq
-            pix = self.perm[(self.buck_pix[buck] + self.buck_offs[buck]) % len(self.perm)]
-            (py,px) = divmod(pix, self.buck_size)
+            pix = (self.buck_pix[buck] + self.buck_offs[buck]) % self.buck_size_sq
+            (px,py) = (self.perm_x[pix] >> self.buck_size_log, self.perm_y[pix] >> self.buck_size_log)
             self.buck_pix[buck] += 1
             (x,y) = (bx+px,by+py)
             if x >= self.width() or y >= self.height():
