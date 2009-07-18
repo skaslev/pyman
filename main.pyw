@@ -119,6 +119,24 @@ class ViewerWidget(QWidget):
         elif key == Qt.Key_I:
             self.instant = not self.instant
             self.reset_pixels()
+        elif key == Qt.Key_Left:
+            self.offset -= QPointF(0.1, 0.0) * self.scale
+            self.reset_pixels()
+        elif key == Qt.Key_Right:
+            self.offset -= QPointF(-0.1, 0.0) * self.scale
+            self.reset_pixels()
+        elif key == Qt.Key_Up:
+            self.offset -= QPointF(0.0, 0.1) * self.scale
+            self.reset_pixels()
+        elif key == Qt.Key_Down:
+            self.offset -= QPointF(0.0, -0.1) * self.scale
+            self.reset_pixels()
+        elif key in [Qt.Key_Equal, Qt.Key_Plus]:
+            self.scale *= 0.8
+            self.reset_pixels()
+        elif key in [Qt.Key_Minus, Qt.Key_Underscore]:
+            self.scale /= 0.8
+            self.reset_pixels()
 
 if __name__ == '__main__':
     import sys
