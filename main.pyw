@@ -17,7 +17,7 @@ class ViewerWidget(QWidget):
         self.reset_pixels()
 
     def resize_pixmap(self):
-        self.pos = random_permutation(self.width() * self.height())
+        self.perm = random_permutation(self.width() * self.height())
         self.pixmap = QPixmap(self.width(), self.height())
         self.pixmap.fill(QColor())
 
@@ -30,7 +30,7 @@ class ViewerWidget(QWidget):
         painter = QPainter(self.pixmap)
         center = QPointF(self.width() / 2, self.height() / 2)
         for i in range(n):
-            (y,x) = divmod(self.pos[self.nr_pixels], self.width())
+            (y,x) = divmod(self.perm[self.nr_pixels], self.width())
             p = QPointF(x,y) - center
             p = self.offset + QPointF(p.x() / self.width(), p.y() / self.height()) * self.scale
             p = complex(p.x(), p.y())
