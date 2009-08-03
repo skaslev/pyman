@@ -69,7 +69,7 @@ class ViewerWidget(QWidget):
                 l = self.buck_size_log - k
                 (nx,ny) = (bx + ((px >> l) << l), by + ((py >> l) << l))
                 painter.fillRect(QRect(nx, ny, 1 << l, 1 << l), c)
-                
+
         return self.nr_pixels == len(self.buck_perm) * self.buck_size_sq
 
     def paintEvent(self, event):
