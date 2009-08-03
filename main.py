@@ -29,7 +29,7 @@ class ViewerWidget(QWidget):
 
         self.nr_buck = ceil(self.width()  / self.buck_size) * \
                        ceil(self.height() / self.buck_size)
-        self.perm_xy = [zip(*fract8_create()) for i in range(5)]
+        self.perm_xy = [list(zip(*fract8_create())) for i in range(5)]
         self.reset_pixels()
 
     def reset_pixels(self):
