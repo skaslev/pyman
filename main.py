@@ -14,7 +14,7 @@ class ViewerWidget(QWidget):
 
         self.instant = True
         self.fractal = Mandelbrot(50)
-        self.offset = QPointF()
+        self.offset = QPointF(-0.5, 0)
         self.scale = 5
         self.last_pos = QPointF()
         self.resize_pixmap()
@@ -29,14 +29,12 @@ class ViewerWidget(QWidget):
 
         self.nr_buck = ceil(self.width()  / self.buck_size) * \
                        ceil(self.height() / self.buck_size)
-
-        self.perm_x,self.perm_y = fract8_create()
-        self.buck_perm = random_permutation(self.nr_buck)
-
+        self.perm_xy = [zip(*fract8_create()) for i in range(5)]
         self.reset_pixels()
 
     def reset_pixels(self):
         self.buck_pix = [0] * self.nr_buck
+        self.buck_perm = random_permutation(self.nr_buck)
         self.nr_pixels = 0
         self.update()
 
@@ -46,12 +44,13 @@ class ViewerWidget(QWidget):
         center = QPointF(self.width() / 2, self.height() / 2)
         for i in range(n):
             buck = self.buck_perm[self.nr_pixels % len(self.buck_perm)]
+            perm = self.buck_perm[buck] % 5
             self.nr_pixels += 1
 
             (by,bx) = divmod(buck, ceil(self.width() / self.buck_size))
             (bx,by) = (bx*self.buck_size, by*self.buck_size)
-            (px,py) = (self.perm_x[self.buck_pix[buck]] >> self.buck_size_log,
-                       self.perm_y[self.buck_pix[buck]] >> self.buck_size_log)
+            (px,py) = self.perm_xy[perm][self.buck_pix[buck]]
+            (px,py) = (px >> self.buck_size_log, py >> self.buck_size_log)
             self.buck_pix[buck] += 1
             (x,y) = (bx+px,by+py)
 
@@ -70,7 +69,7 @@ class ViewerWidget(QWidget):
                 l = self.buck_size_log - k
                 (nx,ny) = (bx + ((px >> l) << l), by + ((py >> l) << l))
                 painter.fillRect(QRect(nx, ny, 1 << l, 1 << l), c)
-
+                
         return self.nr_pixels == len(self.buck_perm) * self.buck_size_sq
 
     def paintEvent(self, event):
