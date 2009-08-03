@@ -36,8 +36,7 @@ class ViewerWidget(QWidget):
         self.reset_pixels()
 
     def reset_pixels(self):
-        self.buck_offs = [2 ** randrange(2*self.buck_size_log) for i in range(self.nr_buck)]
-        self.buck_pix  = [0] * self.nr_buck
+        self.buck_pix = [0] * self.nr_buck
         self.nr_pixels = 0
         self.update()
 
@@ -51,13 +50,10 @@ class ViewerWidget(QWidget):
 
             (by,bx) = divmod(buck, ceil(self.width() / self.buck_size))
             (bx,by) = (bx*self.buck_size, by*self.buck_size)
-            assert self.buck_pix[buck] < self.buck_size_sq
-            pix = (self.buck_pix[buck] + self.buck_offs[buck]) % self.buck_size_sq
-            (px,py) = (self.perm_x[pix] >> self.buck_size_log, self.perm_y[pix] >> self.buck_size_log)
+            (px,py) = (self.perm_x[self.buck_pix[buck]] >> self.buck_size_log,
+                       self.perm_y[self.buck_pix[buck]] >> self.buck_size_log)
             self.buck_pix[buck] += 1
             (x,y) = (bx+px,by+py)
-            if x >= self.width() or y >= self.height():
-                continue
 
             p = QPointF(x,y) - center
             p = self.offset + QPointF(p.x() / self.width(), p.y() / self.height()) * self.scale
@@ -67,7 +63,6 @@ class ViewerWidget(QWidget):
             if not self.instant:
                 painter.fillRect(QRect(x, y, 1, 1), c)
             else:
-                # THIS IS STILL BUGGY
                 k = left_most_bit(self.buck_pix[buck])
                 if self.buck_pix[buck] > (1 << k):
                     k += 1
@@ -75,7 +70,7 @@ class ViewerWidget(QWidget):
                 l = self.buck_size_log - k
                 (nx,ny) = (bx + ((px >> l) << l), by + ((py >> l) << l))
                 painter.fillRect(QRect(nx, ny, 1 << l, 1 << l), c)
-                
+
         return self.nr_pixels == len(self.buck_perm) * self.buck_size_sq
 
     def paintEvent(self, event):
