@@ -1,5 +1,5 @@
-This is an interactive Mandelbrot fractal viewer written in Python 3.
-To run it, install Python 3 [1] and PyQt4 [2] and start main.py.
+This is an interactive Mandelbrot fractal viewer written in Python.
+To run it, install Python 2.6 [1] and PyQt4 [2] and start main.py.
 
 Demo control:
 Esc, Ctrl-Q			Exit
@@ -8,6 +8,7 @@ Arrow keys			Pan camera
 -/_				Zoom out camera
 Left mouse button		Pan camera
 Middle mouse button		Zoom in/out camera
+Right mouse button		Zoom in/out camera
 
 Homepage: http://github.com/skaslev/pyman/
 Author: Slavomir Kaslev <slavomir.kaslev@gmail.com>

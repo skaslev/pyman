@@ -1,3 +1,4 @@
+from __future__ import division
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from math import ceil
@@ -8,7 +9,7 @@ from permutations import random_permutation,fract8_create
 
 class ViewerWidget(QWidget):
     def __init__(self, parent=None):
-        super().__init__(parent)
+        super(QWidget, self).__init__(parent)
         self.setWindowTitle(self.tr("PyMan"))
         self.resize(256, 256)
 
@@ -27,8 +28,8 @@ class ViewerWidget(QWidget):
         self.buck_size = 2 ** self.buck_size_log
         self.buck_size_sq = self.buck_size ** 2
 
-        self.nr_buck = ceil(self.width()  / self.buck_size) * \
-                       ceil(self.height() / self.buck_size)
+        self.nr_buck = int(ceil(self.width()  / self.buck_size) *
+                           ceil(self.height() / self.buck_size))
         self.perm_xy = [list(zip(*fract8_create())) for i in range(5)]
         self.reset_pixels()
 
@@ -82,19 +83,21 @@ class ViewerWidget(QWidget):
         self.resize_pixmap()
 
     def wheelEvent(self, event):
-        numDegrees = event.delta() / 8
-        numSteps = numDegrees / 15.0
-        self.scale *= pow(0.8, numSteps)
+        self.scale *= pow(5, event.delta() / 360.0)
         self.reset_pixels()
 
     def mousePressEvent(self, event):
-        if event.buttons() == Qt.LeftButton:
-            self.last_pos = QPointF(event.pos())
+        self.last_pos = QPointF(event.pos())
 
     def mouseMoveEvent(self, event):
         if event.buttons() & Qt.LeftButton:
             dxy = QPointF(event.pos()) - self.last_pos
             self.offset -= QPointF(dxy.x() / self.width(), dxy.y() / self.height()) * self.scale
+            self.last_pos = QPointF(event.pos())
+            self.reset_pixels()
+        elif event.buttons() & Qt.RightButton:
+            dxy = QPointF(event.pos()) - self.last_pos
+            self.scale *= pow(5, -(dxy.x() / self.width() + dxy.y() / self.height()))
             self.last_pos = QPointF(event.pos())
             self.reset_pixels()
 

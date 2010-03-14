@@ -1,3 +1,4 @@
+from __future__ import division
 from PyQt4.QtGui import QColor
 
 def wave_to_color(wave):
