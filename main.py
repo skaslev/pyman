@@ -9,7 +9,7 @@ from permutations import random_permutation,fract8_create
 
 class ViewerWidget(QWidget):
     def __init__(self, parent=None):
-        super(QWidget, self).__init__(parent)
+        super(ViewerWidget, self).__init__(parent)
         self.setWindowTitle(self.tr("PyMan"))
         self.resize(256, 256)
 
