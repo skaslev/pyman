@@ -83,7 +83,7 @@ class ViewerWidget(QWidget):
         self.resize_pixmap()
 
     def wheelEvent(self, event):
-        self.scale *= pow(5, event.delta() / 360.0)
+        self.scale *= pow(5, -event.delta() / 360.0)
         self.reset_pixels()
 
     def mousePressEvent(self, event):
