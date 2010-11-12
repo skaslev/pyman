@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from __future__ import division
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
