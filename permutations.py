@@ -3,7 +3,7 @@ from random import shuffle, randrange
 
 
 def random_permutation(n):
-    ret = list(range(n))
+    ret = list(xrange(n))
     shuffle(ret)
     return ret
 
@@ -37,15 +37,15 @@ def randbit():
 # The complexity of the algorithm is O(N log(N)). Since K = log(N) is (small)
 # constant (and we actually do only K/2 iterations), it's pracically O(N).
 def scramble(xs):
-    for i in range(K//2):
+    for i in xrange(K//2):
         length = 2 ** (K - i)
         q = 2 ** (i + 1)
-        for offs in range(0, N, length):
+        for offs in xrange(0, N, length):
             inv = [0] * (N // 2)
-            for j in range(offs, offs + length // 2):
+            for j in xrange(offs, offs + length // 2):
                 inv[xs[j] // q] = j
 
-            for j in range(offs + length // 2, offs + length):
+            for j in xrange(offs + length // 2, offs + length):
                 if randbit():
                     j2 = inv[xs[j] // q]
                     xs[j], xs[j2] = xs[j2], xs[j]
@@ -67,7 +67,7 @@ def reverse(xs, offs, length):
 def reorder(xs, ys):
     length = N
     while length > 1:
-        for offs in range(0, N, length):
+        for offs in xrange(0, N, length):
             if randbit():
                 reverse(xs, offs, length)
                 reverse(ys, offs, length)
