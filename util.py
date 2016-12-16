@@ -4,7 +4,7 @@ def left_most_bit(n):
     if n == 0:
         return -1
 
-    ret,b = 0,16
+    ret, b = 0, 16
     while b:
         if n >> b != 0:
             ret += b

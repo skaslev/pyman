@@ -1,8 +1,9 @@
 from __future__ import division
-from PyQt4.QtGui import QColor
+from Qt import QtGui
+
 
 def wave_to_color(wave):
-    (r,g,b) = (0, 0, 0)
+    r, g, b = (0, 0, 0)
     if wave >= 380 and wave <= 440:
         r = -1 * (wave - 440) / (440 - 380)
         b = 1
@@ -27,7 +28,8 @@ def wave_to_color(wave):
     elif wave > 700:
         s = 0.3 + 0.7 * (780 - wave) / (780 - 700)
 
-    return QColor(*map(lambda x: 255 * pow(x * s, 0.8), (r, g, b)))
+    return QtGui.QColor(*map(lambda x: 255 * pow(x * s, 0.8), (r, g, b)))
+
 
 class ColorMap:
     def __init__(self, size=512):
@@ -38,6 +40,7 @@ class ColorMap:
         if idx < 0 or idx >= self.__size:
             raise IndexError('index out of range')
         return self.__colormap[idx]
+
 
 class Mandelbrot:
     def __init__(self, iterations=512):
@@ -50,4 +53,4 @@ class Mandelbrot:
             p = p0 + p**2
             if abs(p) > 4.0:
                 return self.__colormap[i]
-        return QColor()
+        return QtGui.QColor()
