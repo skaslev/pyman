@@ -1,5 +1,5 @@
 This is an interactive Mandelbrot fractal viewer written in Python.
-To run it, install Python 2 [1] and PySide [2] or PyQt [3] or and start main.py.
+To run it, install Python 2 [1] and PySide [2] or PyQt [3] and start main.py.
 
 Demo control:
 Esc, Ctrl-Q			Exit
