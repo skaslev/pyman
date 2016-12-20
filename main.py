@@ -88,7 +88,7 @@ class ViewerWidget(QtWidgets.QWidget):
 
     def wheelEvent(self, event):
         if Qt.__qt_version__.startswith('4.'):
-            delta = event.delta()
+            delta = -event.delta()
         else:
             delta = event.angleDelta().y()
         self.scale *= 1.0 + delta / 360.0
