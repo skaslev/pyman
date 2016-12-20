@@ -4,6 +4,7 @@ from math import ceil
 from random import randrange
 import sys
 
+import Qt
 from Qt import QtCore, QtGui, QtWidgets
 from fractals import Mandelbrot
 from permutations import random_permutation, fract8_create
@@ -14,7 +15,7 @@ class ViewerWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(ViewerWidget, self).__init__(parent)
         self.setWindowTitle(self.tr("PyMan"))
-        self.resize(256, 256)
+        self.resize(720, 720)
 
         self.instant = True
         self.fractal = Mandelbrot(50)
@@ -86,8 +87,11 @@ class ViewerWidget(QtWidgets.QWidget):
         self.resize_pixmap()
 
     def wheelEvent(self, event):
-        delta = event.angleDelta()
-        self.scale *= 1.0 + delta.y() / 360.0
+        if Qt.__qt_version__.startswith('4.'):
+            delta = event.delta()
+        else:
+            delta = event.angleDelta().y()
+        self.scale *= 1.0 + delta / 360.0
         self.reset_pixels()
 
     def mousePressEvent(self, event):
