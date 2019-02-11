@@ -34,8 +34,7 @@ def randbit():
 # Makes random swaps over the permutation xs which keep it's fractality. It
 # only affects the lower K/2 bits of xs elements, so it doesn't degrade the
 # discrepancy.
-# The complexity of the algorithm is O(N log(N)). Since K = log(N) is (small)
-# constant (and we actually do only K/2 iterations), it's pracically O(N).
+# The complexity of the algorithm is O(N log(N)).
 def scramble(xs):
     for i in xrange(K//2):
         length = 2 ** (K - i)
@@ -61,9 +60,7 @@ def reverse(xs, offs, length):
 
 # Makes random reverses over xs and ys. It keeps the points untouched and
 # chages only their order while keeping xs and ys fractal.
-# The complexity is O(N log(N)). Since K = log(N) = const, it's O(N).
-#
-# NOTE: faster algorithm may be applied exploiting that reverse(reverse(x)) = x
+# The complexity is O(N log(N)).
 def reorder(xs, ys):
     length = N
     while length > 1:
