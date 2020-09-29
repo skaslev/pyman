@@ -34,7 +34,7 @@ class ViewerWidget(QtWidgets.QWidget):
 
         self.nr_buck = int(ceil(self.width() / self.buck_size) *
                            ceil(self.height() / self.buck_size))
-        self.perm_xy = [list(zip(*fract8_create())) for i in xrange(5)]
+        self.perm_xy = [list(zip(*fract8_create())) for i in range(5)]
         self.reset_pixels()
 
     def reset_pixels(self):
@@ -47,7 +47,7 @@ class ViewerWidget(QtWidgets.QWidget):
         n = min(n, len(self.buck_perm) * self.buck_size_sq - self.nr_pixels)
         painter = QtGui.QPainter(self.pixmap)
         center = QtCore.QPointF(self.width() / 2, self.height() / 2)
-        for i in xrange(n):
+        for i in range(n):
             buck = self.buck_perm[self.nr_pixels % len(self.buck_perm)]
             perm = self.buck_perm[buck] % 5
             self.nr_pixels += 1

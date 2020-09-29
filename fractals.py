@@ -34,7 +34,7 @@ def wave_to_color(wave):
 class ColorMap:
     def __init__(self, size=512):
         self.__size = size
-        self.__colormap = [wave_to_color(380.0 + (i * 400.0 / size)) for i in xrange(size)]
+        self.__colormap = [wave_to_color(380.0 + (i * 400.0 / size)) for i in range(size)]
 
     def __getitem__(self, idx):
         if idx < 0 or idx >= self.__size:
@@ -49,7 +49,7 @@ class Mandelbrot:
 
     def __call__(self, p0):
         p = p0
-        for i in xrange(self.__iterations):
+        for i in range(self.__iterations):
             p = p0 + p**2
             if abs(p) > 4.0:
                 return self.__colormap[i]
