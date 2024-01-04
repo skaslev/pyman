@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-from __future__ import division
+#!/usr/bin/env python3
 from math import ceil
 from random import randrange
 import sys
 
-import Qt
-from Qt import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 from fractals import Mandelbrot
 from permutations import random_permutation, fract8_create
 from util import left_most_bit
@@ -87,31 +85,28 @@ class ViewerWidget(QtWidgets.QWidget):
         self.resize_pixmap()
 
     def wheelEvent(self, event):
-        if Qt.__qt_version__.startswith('4.'):
-            delta = -event.delta()
-        else:
-            delta = event.angleDelta().y()
+        delta = event.angleDelta().y()
         self.scale *= 1.0 + delta / 360.0
         self.reset_pixels()
 
     def mousePressEvent(self, event):
-        self.last_pos = QtCore.QPointF(event.pos())
+        self.last_pos = QtCore.QPointF(event.position())
 
     def mouseMoveEvent(self, event):
         if event.buttons() & QtCore.Qt.LeftButton:
-            dxy = QtCore.QPointF(event.pos()) - self.last_pos
+            dxy = QtCore.QPointF(event.position()) - self.last_pos
             self.offset -= QtCore.QPointF(dxy.x() / self.width(), dxy.y() / self.height()) * self.scale
-            self.last_pos = QtCore.QPointF(event.pos())
+            self.last_pos = QtCore.QPointF(event.position())
             self.reset_pixels()
         elif event.buttons() & QtCore.Qt.RightButton:
-            dxy = QtCore.QPointF(event.pos()) - self.last_pos
+            dxy = QtCore.QPointF(event.position()) - self.last_pos
             self.scale *= pow(5, -(dxy.x() / self.width() + dxy.y() / self.height()))
-            self.last_pos = QtCore.QPointF(event.pos())
+            self.last_pos = QtCore.QPointF(event.position())
             self.reset_pixels()
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
-            dxy = QtCore.QPointF(event.pos()) - self.last_pos
+            dxy = QtCore.QPointF(event.position()) - self.last_pos
             self.offset -= QtCore.QPointF(dxy.x() / self.width(), dxy.y() / self.height()) * self.scale
             self.reset_pixels()
 
@@ -146,4 +141,4 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     widget = ViewerWidget()
     widget.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

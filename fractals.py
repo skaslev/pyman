@@ -1,5 +1,4 @@
-from __future__ import division
-from Qt import QtGui
+from PySide6 import QtGui
 
 
 def wave_to_color(wave):
